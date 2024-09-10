@@ -68,7 +68,7 @@ const expenseSlice = createSlice({
   initialState: DUMMY_EXPENSES,
   reducers: {
     addExpense(state, action) {
-      state.push(action.payload);
+      return [action.payload, ...state];
     },
     removeExpense(state, action) {
       return state.filter((expense) => expense.id !== action.payload);
@@ -77,6 +77,7 @@ const expenseSlice = createSlice({
       const { id, description, amount, date } = action.payload;
       const expense = state.find((expense) => expense.id === id);
       if (expense) {
+        expense.id = id;
         expense.description = description;
         expense.amount = amount;
         expense.date = date;

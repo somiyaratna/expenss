@@ -1,5 +1,7 @@
 export function getFormattedDate(date) {
-  return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+  const isoString = date.toISOString().slice(0, 10);
+  const [year, month, day] = isoString.split("-");
+  return `${day}-${month}-${year}`;
 }
 
 export function getDateMinusDays(date, days) {
