@@ -1,7 +1,5 @@
 export function getFormattedDate(date) {
-  const isoString = date.toISOString().slice(0, 10);
-  const [year, month, day] = isoString.split("-");
-  return `${day}-${month}-${year}`;
+  return date.toUTCString().slice(0, 16);
 }
 
 export function getDateMinusDays(date, days) {

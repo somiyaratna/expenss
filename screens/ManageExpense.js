@@ -5,7 +5,8 @@ import { GlobalStyles } from "../constants/styles";
 import Button from "../ui/Button";
 import { useDispatch, useSelector } from "react-redux";
 import { addExpense, editExpense, removeExpense } from "../store/expenseSlice";
-import ExpenseForm from "../components/ManageExpense.js/ExpenseForm";
+import ExpenseForm from "../components/ManageExpense/ExpenseForm";
+import { deleteExpense, storeExpense, updateExpense } from "../utils/http";
 
 const ManageExpense = ({ route, navigation }) => {
   const dispatch = useDispatch();
@@ -23,8 +24,9 @@ const ManageExpense = ({ route, navigation }) => {
     });
   }, [navigation, isEditing]);
 
-  function deleteExpenseHandler() {
+  async function deleteExpenseHandler() {
     dispatch(removeExpense(editedExpenseId));
+    await deleteExpense(editedExpenseId);
     navigation.goBack();
   }
 
@@ -32,21 +34,18 @@ const ManageExpense = ({ route, navigation }) => {
     navigation.goBack();
   }
 
-  function confirmHandler(expenseData) {
+  async function confirmHandler(expenseData) {
     if (isEditing) {
-      dispatch(
-        editExpense({
-          ...expenseData,
-        })
-      );
-      expenseData = null;
+      dispatch(editExpense(expenseData));
+      await updateExpense(editedExpenseId, expenseData);
     } else {
+      const id = await storeExpense(expenseData);
       dispatch(
         addExpense({
           ...expenseData,
+          id: id,
         })
       );
-      expenseData = null;
     }
     navigation.goBack();
   }

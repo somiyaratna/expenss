@@ -1,6 +1,5 @@
 import { Alert, StyleSheet, Text, View } from "react-native";
 import { getFormattedDate } from "../../utils/date";
-import uuid from "react-native-uuid";
 import React from "react";
 import Input from "./Input";
 import Button from "../../ui/Button";
@@ -36,7 +35,6 @@ const ExpenseForm = ({
 
   function submitHandler() {
     const expenseData = {
-      id: uuid.v4(),
       amount: +inputs.amount.value,
       date: new Date(inputs.date.value),
       description: inputs.description.value,
@@ -88,7 +86,8 @@ const ExpenseForm = ({
           inValid={!inputs.date.isValid}
           style={styles.rowInput}
           textInputConfig={{
-            placeholder: "DD-MM-YYYY",
+            placeholder: "YYYY-MM-DD",
+            keyboardType: "numeric",
             maxLength: 10,
             onChangeText: inputChangeHandler.bind(this, "date"),
             value: inputs.date.value,
