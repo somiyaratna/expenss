@@ -12,6 +12,7 @@ const expenseSlice = createSlice({
     },
     editExpense(state, action) {
       const { id, description, amount, date } = action.payload;
+
       const expense = state.find((expense) => expense.id === id);
       if (expense) {
         expense.description = description;

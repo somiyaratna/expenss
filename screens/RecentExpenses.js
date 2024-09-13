@@ -1,32 +1,44 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ExpensesOutput from "../components/ExpensesOutput/ExpensesOutput";
 import { useDispatch, useSelector } from "react-redux";
 import { getDateMinusDays } from "../utils/date";
 import { fetchExpenses } from "../utils/http";
 import { setExpense } from "../store/expenseSlice";
+import LoadingOverlay from "../ui/LoadingOverlay";
+import ErrorOverlay from "../ui/ErrorOverlay";
 
 const RecentExpenses = () => {
   const expenses = useSelector((state) => state.expenses);
+  const [isFetching, setIsFetching] = useState(false);
+  const [error, setError] = useState();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    let isMounted = true;
     async function getExpenses() {
+      setIsFetching(true);
       try {
         const fetchedExpenses = await fetchExpenses();
-        if (isMounted) {
-          dispatch(setExpense(fetchedExpenses));
-        }
+        dispatch(setExpense(fetchedExpenses));
       } catch (error) {
-        console.error("Failed to fetch expenses:", error);
-        // Handle the error accordingly
+        setError(`Could not fetch expenses! ${error.message}`);
+      } finally {
+        setIsFetching(false);
       }
     }
     getExpenses();
-    return () => {
-      isMounted = false; // Cleanup function to update isMounted on unmount
-    };
-  }, [dispatch]);
+  }, []);
+
+  function errorHandler() {
+    setError(null);
+  }
+
+  if (error && !isFetching) {
+    return <ErrorOverlay message={error} onConfirm={errorHandler} />;
+  }
+
+  if (isFetching) {
+    return <LoadingOverlay />;
+  }
 
   const recentExpenses = expenses.filter((expense) => {
     const today = new Date();

@@ -1,5 +1,4 @@
-import { Alert, StyleSheet, Text, View } from "react-native";
-import { getFormattedDate } from "../../utils/date";
+import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import Input from "./Input";
 import Button from "../../ui/Button";
@@ -17,7 +16,7 @@ const ExpenseForm = ({
       isValid: true,
     },
     date: {
-      value: defaultValues ? getFormattedDate(defaultValues.date) : "",
+      value: defaultValues ? defaultValues.date.toISOString() : "",
       isValid: true,
     },
     description: {
@@ -57,7 +56,6 @@ const ExpenseForm = ({
       return;
     }
     onSubmit(expenseData);
-    defaultValues = null;
   }
 
   const formIsInvalid =
@@ -80,7 +78,6 @@ const ExpenseForm = ({
             value: inputs.amount.value,
           }}
         />
-
         <Input
           label={"Date"}
           inValid={!inputs.date.isValid}
@@ -153,6 +150,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   buttonContainer: {
+    marginTop: 16,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
